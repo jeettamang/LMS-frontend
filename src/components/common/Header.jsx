@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { BASE_URL } from "../../config/ApiRoute";
 
 const Header = () => {
   const { state, logout } = useContext(AuthContext);
@@ -24,12 +23,12 @@ const Header = () => {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <nav className="bg-[#F1F8F9] border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="shrink-0">
             <Link to="/" className="text-2xl font-bold text-blue-600">
-              BRAND
+              <img className="h-32 w-auto " src="/lmslogo.png" />
             </Link>
           </div>
           <div className="hidden md:flex space-x-8 items-center">

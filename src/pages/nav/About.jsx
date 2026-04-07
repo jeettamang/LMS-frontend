@@ -1,177 +1,190 @@
 import { useEffect, useState } from "react";
 import { IoPeopleOutline } from "react-icons/io5";
-import { FaHandshakeAngle } from "react-icons/fa6";
-import { FaCrown } from "react-icons/fa6";
+import { FaHandshakeAngle, FaCrown } from "react-icons/fa6";
+import { Loader2 } from "lucide-react";
 import api from "../../utils/axios";
-
 
 const About = () => {
   const [instructors, setInstructors] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchInst = async () => {
-      const res = await api.get("/instructor/get-all");
-      setInstructors(res.data.instructors);
-      console.log(res.data.instructors);
+      try {
+        const res = await api.get("/instructor/public");
+        setInstructors(res.data.publicInstructors);
+      } catch (error) {
+        console.error("Error fetching instructors:", error);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchInst();
   }, []);
+
   return (
-    <div>
-      <div className="p-16 md:p-12 md:max-w-6xl ">
-        <h1 className="text-[#0000ff] text-3xl font-bold text-center">
-          Our Story
-        </h1>
-        <p className="text-[#0037ff] text-md mt-2 text-center">
-          Make learning and teaching more effective with active <br />{" "}
-          participation and student collaboration
-        </p>
-      </div>
-      <div className="md:flex justify-around p-4">
-        <div className="p-2">
-          <h2 className="text-[#ff00ff] font-semibold text-2xl">Background</h2>
-          <p className="p-4 text-left text-2xl max-w-4xl">
+    <div className="bg-white">
+      {/* Hero Section */}
+      <section className="py-20 px-6 bg-gradient-to-b from-blue-50 to-white text-center">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-blue-700 mb-6">
+            Our Story
+          </h1>
+          <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
+            Empowering the next generation of IT professionals in Nepal through
+            practical learning and industry-leading mentorship.
+          </p>
+        </div>
+      </section>
+
+      {/* Content Section */}
+      <section className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12 items-center">
+        <div className="space-y-6">
+          <h2 className="text-3xl font-bold text-gray-800 border-l-4 border-pink-500 pl-4">
+            Background
+          </h2>
+          <p className="text-lg text-gray-600 leading-relaxed">
             Sipalaya empowers professionals and students in the tech industry
             with tailored, top-notch training programs. Our expert instructors,
             with extensive industry experience, provide personalized support.
-            Offering interactive, hands-on courses covering the latest
-            technologies, we’ve helped countless individuals elevate their
-            careers. Join us to achieve your goals confidently.
           </p>
-          <div className="text-center mt-2.5">
-            <button className="w-52 p-2 rounded-2xl cursor-pointer bg-blue-500 hover:bg-blue-700 text-white">
-              Let's connect
-            </button>
-          </div>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold shadow-lg transition-all transform hover:-translate-y-1">
+            Let's Connect
+          </button>
         </div>
-        <div className="max-w-3xl">
+        <div className="relative">
+          <div className="absolute -inset-4 bg-blue-100 rounded-2xl -z-10 transform rotate-3"></div>
           <img
-            className="w-full rounded-xl"
+            className="w-full rounded-2xl shadow-2xl object-cover h-[400px]"
             src="https://broadwayinfosys.com/uploads/banner/1751542485_60565.jpg"
-            alt="Sipalaya"
+            alt="Sipalaya Training"
           />
         </div>
-      </div>
+      </section>
 
-      <div className="md:flex gap-4 p-4 font-serif mt-12">
-        <div className="bg-[#edf3fa] text-[#151a21] p-10 rounded-2xl">
-          <h3 className="text-xl font-semibold  text-[#006af5] ">
-            Our Mission
-          </h3>
-          <p className="text-2xl text-left">
-            We are creating a digital tomorrow by empowering people with
-            competent skills & turning them into able IT professionals who can
-            contribute & transform society as a whole.
-          </p>
+      {/* Mission & Vision */}
+      <section className="bg-gray-50 py-20 px-6">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8">
+          <div className="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+            <h3 className="text-2xl font-bold text-blue-600 mb-4 flex items-center gap-2">
+              Our Mission
+            </h3>
+            <p className="text-gray-600 text-lg leading-relaxed">
+              Creating a digital tomorrow by empowering people with competent
+              skills and turning them into able IT professionals.
+            </p>
+          </div>
+          <div className="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+            <h3 className="text-2xl font-bold text-blue-600 mb-4">
+              Our Vision
+            </h3>
+            <p className="text-gray-600 text-lg leading-relaxed">
+              Emerging as the premier IT education center by generating a
+              talented professional workforce for technological advancement.
+            </p>
+          </div>
         </div>
-        <div className="bg-[#edf3fa] text-[#151a21] p-10 rounded-2xl">
-          <h3 className="text-xl font-semibold text-[#006af5]">Our Vision</h3>
-          <p className="text-2xl text-left">
-            We are emerging as the premier IT education center beyond our
-            boundaries by generating a talented professional workforce for
-            overall technological advancement.
-          </p>
-        </div>
-      </div>
-      <h1 className="text-2xl text-center font-bold border-b mt-4 text-[#ff00ff] font-serif">
-        The people behind the mission
-      </h1>
-      <div className="bg-gray-100 p-12 mt-2 grid md:grid-cols-4 gap-6">
-        {instructors?.length > 0 ? (
-          instructors.map((ins) => (
-            <div key={ins._id} className="bg-white p-4 rounded-xl shadow w-72">
-              <img
-                className="rounded-2xl w-full"
-                src={ins.profileImage}
-                alt={ins.name}
-              />
+      </section>
+      <section className="py-24 px-6 max-w-7xl mx-auto text-center">
+        <h2 className="text-3xl font-bold text-gray-800 mb-12">
+          The People Behind the Mission
+        </h2>
 
-              <div className="text-center mt-2">
-                <h2 className="text-xl font-semibold text-[#ed0202]">
-                  {ins.name}
-                </h2>
-                <p>{ins.bio}</p>
-              </div>
-            </div>
-          ))
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="animate-spin text-blue-600" size={40} />
+          </div>
         ) : (
-          <div>Instructor not found</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {instructors.map((ins) => (
+              <div
+                key={ins._id}
+                className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300"
+              >
+                <div className="h-64 overflow-hidden">
+                  <img
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    src={ins.profileImage || "https://via.placeholder.com/300"}
+                    alt={ins.name}
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
+                    {ins.name}
+                  </h3>
+                  <p className="text-gray-500 text-sm line-clamp-2">
+                    {ins.specialization || "Industry Expert & Mentor"}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
-      </div>
-      <h1 className="bg-gray-200 text-center text-2xl font-bold pt-6 p-4 font-serif">Our Core Value</h1>
-      <div className="flex flex-col md:flex-row justify-center gap-6 bg-gray-200 p-8">
-        <div className="bg-white shadow-gray-3xl rounded-xl py-12 px-8 max-w-sm">
-          <h2 className="text-2xl font-bold mb-2">
-            <IoPeopleOutline size={30} /> People
-          </h2>
-          <p className="text-xl text-left">
-            We strive and focus on one on one commitment through our intense
-            counselling, career guidances & support ensuring the individual
-            potential transforms into a tomorrow’s professional able to lead &
-            shine.
-          </p>
+      </section>
+
+      <section className="bg-gray-900 text-white py-24 px-6">
+        <div className="max-w-7xl mx-auto text-center mb-16">
+          <h2 className="text-3xl font-bold">Our Core Values</h2>
         </div>
-
-        <div className="bg-white shadow-gray-3xl rounded-xl py-12 px-8 max-w-sm">
-          <h2 className="text-2xl font-bold mb-2">
-            <FaCrown size={30} /> Leadership
-          </h2>
-          <p className="text-xl text-left">
-            We go beyond technical training to develop competent professionals
-            having headship expertise required for project management, decision
-            making, and strategic ingenuity. We empower critical thinking,
-            emotional intelligence, and solution-focused future leaders.
-          </p>
+        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
+          {[
+            {
+              icon: <IoPeopleOutline size={40} />,
+              title: "People",
+              desc: "Focus on one-on-one commitment through career guidance.",
+            },
+            {
+              icon: <FaCrown size={40} />,
+              title: "Leadership",
+              desc: "Empowering critical thinking and solution-focused future leaders.",
+            },
+            {
+              icon: <FaHandshakeAngle size={40} />,
+              title: "Trust",
+              desc: "High standards and integrity are the benchmarks for our trust.",
+            },
+          ].map((val, i) => (
+            <div
+              key={i}
+              className="flex flex-col items-center text-center space-y-4"
+            >
+              <div className="p-4 bg-blue-600/20 text-blue-400 rounded-full">
+                {val.icon}
+              </div>
+              <h3 className="text-xl font-bold">{val.title}</h3>
+              <p className="text-gray-400 leading-relaxed">{val.desc}</p>
+            </div>
+          ))}
         </div>
+      </section>
 
-        <div className="bg-white shadow-gray-3xl rounded-xl py-12 px-8 max-w-sm">
-          <h2 className="text-2xl font-bold mb-2">
-            <FaHandshakeAngle size={30} /> Trust
-          </h2>
-          <p className="text-xl text-left">
-            We instate everlasting connection with credibility of consistent
-            quality in learning & growth to our students, clients, partners, and
-            employees. Our solid foundation of high standards, integrity &
-            commitment to excellence are the benchmarks for the trust we've
-            received over the years.
-          </p>
+      <section className="py-20 px-6 max-w-7xl mx-auto grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
+        <h2 className="text-center text-gray-500 font-medium mb-12 uppercase tracking-widest">
+          Trusted by Industry Leaders
+        </h2>
+        <div className="flex flex-wrap justify-center gap-12 md:gap-24 items-center">
+          <img
+            className="h-8"
+            src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
+            alt="Microsoft"
+          />
+          <img
+            className="h-8"
+            src="https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg"
+            alt="Cisco"
+          />
+          <img
+            className="h-8"
+            src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg"
+            alt="Google"
+          />
+          <img
+            className="h-8"
+            src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
+            alt="AWS"
+          />
         </div>
-      </div>
-      <h1 className="text-2xl text-center font-bold mt-16 text-[#ff00ff] font-serif">
-        Partnerships & Affiliations
-      </h1>
-
-      <p className="text-center text-lg mt-2 max-w-3xl mx-auto">
-        We collaborate with leading technology companies and certification
-        organizations to ensure our students receive industry-recognized
-        training and opportunities.
-      </p>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 p-12 items-center bg-gray-100 mt-6">
-        <img
-          className="h-12 mx-auto"
-          src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
-          alt="Microsoft"
-        />
-
-        <img
-          className="h-12 mx-auto"
-          src="https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg"
-          alt="Cisco"
-        />
-
-        <img
-          className="h-12 mx-auto"
-          src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg"
-          alt="Google"
-        />
-
-        <img
-          className="h-12 mx-auto"
-          src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
-          alt="AWS"
-        />
-      </div>
+      </section>
     </div>
   );
 };

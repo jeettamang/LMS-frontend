@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Save, Image as ImageIcon, ArrowLeft } from "lucide-react";
 import api from "../../utils/axios";
-import { AuthContext } from "../../context/AuthContext"; // Assuming you have this
+import { AuthContext } from "../../context/AuthContext";
 
 const InstructorCreateCourse = () => {
   const navigate = useNavigate();
@@ -17,12 +17,10 @@ const InstructorCreateCourse = () => {
     description: "",
     price: "",
     duration: "",
-    // We initialize this, but the backend will primarily use the token ID
     instructor: userInfo?.id || userInfo?._id || "",
     image: null,
   });
 
-  // Ensure instructor ID is synced if userInfo loads late
   useEffect(() => {
     if (userInfo) {
       setCourseData((prev) => ({
@@ -59,9 +57,6 @@ const InstructorCreateCourse = () => {
       data.append("description", courseData.description);
       data.append("price", courseData.price);
       data.append("duration", courseData.duration);
-
-      // IMPORTANT: Even though backend uses req.user._id,
-      // we send this to satisfy the instructorFromBody variable check.
       data.append("instructor", courseData.instructor);
       data.append("image", courseData.image);
 
@@ -113,8 +108,6 @@ const InstructorCreateCourse = () => {
                     required
                   />
                 </div>
-
-                {/* Read-only instructor name so they know who they are posting as */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1">
                     Instructor

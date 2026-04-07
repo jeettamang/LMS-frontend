@@ -1,5 +1,5 @@
-import { Routes, Route } from "react-router-dom";
-import ProtectedRoute from "../components/protectedRoute/ProtectedRoute";
+import { Routes, Route, Outlet } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 
 // Layouts
 import AdminLayout from "../layouts/AdminLayout";
@@ -14,6 +14,7 @@ import CourseDetails from "../pages/course/CourseDetails";
 import About from "../pages/nav/About";
 import Contact from "../pages/nav/Contact";
 import EnrollCourse from "../pages/course/EnrollCourse";
+import Footer from "../components/common/Footer";
 
 // For admin
 import AdminDashboard from "../features/admin/AdminDashboard";
@@ -53,22 +54,30 @@ import InstructorMyCourses from "../features/instructor/InstructorMyCourses";
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/courses" element={<Courses />} />
-      <Route path="/course-details/:id" element={<CourseDetails />} />
-      <Route path="/enroll/:id" element={<EnrollCourse />} />
-      <Route path="/blogs" element={<Blogs />} />
-      <Route path="/getBySlug/:slug" element={<BlogDetails />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/edit-profile" element={<EditProfile />} />
-      <Route path="/payment" element={<PaymentApi />} />
-      <Route path="/payment-success" element={<Success />} />
-      <Route path="/payment-failure" element={<Failure />} />
+      <Route
+        element={
+          <>
+            <Outlet />
+            <Footer />
+          </>
+        }
+      >
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route path="/course-details/:id" element={<CourseDetails />} />
+        <Route path="/enroll/:id" element={<EnrollCourse />} />
+        <Route path="/blogs" element={<Blogs />} />
+        <Route path="/getBySlug/:slug" element={<BlogDetails />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/payment" element={<PaymentApi />} />
+        <Route path="/payment-success" element={<Success />} />
+        <Route path="/payment-failure" element={<Failure />} />
+      </Route>
 
       {/* Student/User Dashboard Area */}
       <Route element={<ProtectedRoute allowedRoles={["Student"]} />}>

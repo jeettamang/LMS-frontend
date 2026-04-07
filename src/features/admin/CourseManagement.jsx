@@ -1,51 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Pencil, Trash2, Plus } from "lucide-react";
-import { toast } from "react-toastify";
-import api from "../../utils/axios";
+import { useNavigate } from "react-router-dom";
+import useCourses from "../../hooks/admin/useCourses";
 
 const CourseManagement = () => {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
-  const getCourses = async () => {
-    try {
-      setLoading(true);
-      const res = await api.get("/course/get-all");
-      setCourses(res.data.course || []);
-      console.log(res.data);
-    } catch (error) {
-      console.error("Fetch error:", error);
-      toast.error("Failed to fetch courses");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteCourse = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this course?",
-    );
-    if (!confirmDelete) return;
-
-    try {
-      await api.delete(`/course/delete/${id}`, {
-        withCredentials: true,
-      });
-
-      toast.success("Course deleted successfully");
-      getCourses();
-    } catch (error) {
-      console.error("Delete error:", error.response?.data || error.message);
-      toast.error(error.response?.data?.message || "Failed to delete course");
-    }
-  };
-
-  useEffect(() => {
-    getCourses();
-  }, []);
-
+  const { courses, loading, deleteCourse } = useCourses();
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">

@@ -1,79 +1,19 @@
-import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Plus,
-  Pencil,
-  Trash2,
-  ExternalLink,
-  Search,
-  FileText,
-  CheckCircle,
-  Clock,
-} from "lucide-react";
-import { toast } from "react-toastify";
-import api from "../../utils/axios";
+import { Plus, Pencil, Trash2, Search, CheckCircle, Clock } from "lucide-react";
+import useBlogs from "../../hooks/admin/useBlogs";
 
 const BlogManagement = () => {
   const navigate = useNavigate();
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [pagination, setPagination] = useState({ page: 1, totalPages: 1 });
-
-  const fetchBlogs = async (page = 1) => {
-    try {
-      setLoading(true);
-      const res = await api.get(`/blogs/list?page=${page}&title=${searchTerm}`);
-
-      setBlogs(res.data.data.blogs || []);
-      console.log(res.data);
-      setPagination({
-        page: res.data.data.page,
-        totalPages: res.data.data.totalPages,
-      });
-    } catch (error) {
-      toast.error("Failed to fetch blogs");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchBlogs();
-  }, [searchTerm]);
-
-  const handleDelete = async (slug) => {
-    if (window.confirm("Are you sure you want to delete this blog?")) {
-      try {
-        await api.delete(`/blog/delete-by-slug/${slug}`);
-        toast.success("Blog deleted");
-        fetchBlogs(pagination.page);
-      } catch (err) {
-        toast.error("Delete failed");
-      }
-    }
-  };
-
-  const handleStatusToggle = async (slug, currentStatus) => {
-    const newStatus = currentStatus === "published" ? "draft" : "published";
-    setBlogs((prevBlogs) =>
-      prevBlogs.map((blog) =>
-        blog.slug === slug ? { ...blog, status: newStatus } : blog,
-      ),
-    );
-
-    try {
-      await api.patch(`/blogs/status-slug/${slug}`, { status: newStatus }); //
-      toast.success(`Blog moved to ${newStatus}`);
-    } catch (err) {
-      toast.error("Status update failed");
-      setBlogs((prevBlogs) =>
-        prevBlogs.map((blog) =>
-          blog.slug === slug ? { ...blog, status: currentStatus } : blog,
-        ),
-      );
-    }
-  };
+  const {
+    blogs,
+    loading,
+    handleDelete,
+    handleStatusToggle,
+    searchTerm,
+    setSearchTerm,
+    pagination,
+    fetchBlogs,
+  } = useBlogs();
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -201,17 +141,23 @@ const BlogManagement = () => {
         </table>
 
         {/* Pagination */}
-        <div className="p-4 border-t border-gray-50 flex justify-center gap-2">
-          {[...Array(pagination.totalPages)].map((_, i) => (
-            <button
-              key={i}
-              onClick={() => fetchBlogs(i + 1)}
-              className={`px-3 py-1 rounded-md ${pagination.page === i + 1 ? "bg-blue-600 text-white" : "bg-gray-100"}`}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div>
+        {pagination.totalPages > 1 && (
+          <div className="p-4 border-t border-gray-50 flex justify-center gap-2">
+            {[...Array(pagination.totalPages)].map((_, i) => (
+              <button
+                key={i}
+                onClick={() => fetchBlogs(i + 1)}
+                className={`px-3 py-1 rounded-md transition ${
+                  pagination.page === i + 1
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 hover:bg-gray-200"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

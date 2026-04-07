@@ -1,72 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { ArrowLeft, User, Mail, Award, AlignLeft } from "lucide-react";
-import api from "../../utils/axios";
+import useEditInstructor from "../../hooks/admin/useEditInstructor";
 
 const EditInstructor = () => {
-  const { id } = useParams();
-  const { state } = useLocation(); 
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-
-  const instructor = state?.inst;
-
-  const [formData, setFormData] = useState({
-    name: instructor?.name || "",
-    email: instructor?.email || "",
-    profileImage: instructor?.profileImage || "",
-    specialization: instructor?.specialization || "",
-    bio: instructor?.bio || "",
-  });
-
-  // Fallback: If user refreshes, fetch the data from API using ID
-  useEffect(() => {
-    if (!instructor) {
-      const fetchInstructor = async () => {
-        try {
-          const res = await api.get(`/instructor/get/${id}`);
-          const data = res.data.instructor;
-          setFormData({
-            name: data.name,
-            email: data.email,
-            specialization: data.specialization || "",
-            bio: data.bio || "",
-          });
-        } catch (error) {
-          toast.error("Could not find instructor details");
-          navigate("/admin/instructor-management");
-        }
-      };
-      fetchInstructor();
-    }
-  }, [id, instructor, navigate]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      // Professional API call
-      const response = await api.put(`/instructor/update/${id}`, formData);
-
-      toast.success(response.data.message || "Profile updated successfully");
-      navigate("/admin/instructor-management");
-      console.log(response.data)
-    } catch (error) {
-      console.error("Update failed:", error);
-      toast.error(
-        error.response?.data?.message || "Failed to update instructor",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { loading,
+    formData,
+    handleChange,
+    handleUpdate} = useEditInstructor()
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-120px)] p-6 bg-gray-50/30">

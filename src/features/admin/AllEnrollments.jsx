@@ -10,7 +10,6 @@ const AllEnrollments = () => {
 
   const fetchAll = async () => {
     try {
-      // Calling the route WITHOUT ?limit to get everything
       const res = await api.get("/enrollment/get-enrolls");
       setEnrollments(res.data.enrollments || []);
     } catch (error) {

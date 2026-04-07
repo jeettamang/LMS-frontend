@@ -1,106 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Save, Image as ImageIcon } from "lucide-react";
-import api from "../../utils/axios";
+import useEditCourse from "../../hooks/admin/UseEditCourse";
 
 const EditCourse = () => {
-  const { id } = useParams();
-  const { state } = useLocation();
   const navigate = useNavigate();
-
-  // Local States
-  const [loading, setLoading] = useState(false);
-  const [instructors, setInstructors] = useState([]);
-  const [preview, setPreview] = useState(state?.course?.image || null);
-
-  const [formData, setFormData] = useState({
-    title: state?.course?.title || "",
-    instructor: state?.course?.instructor?._id || "", // CRITICAL: Use ID, not name
-    price: state?.course?.price || "",
-    duration: state?.course?.duration || "",
-    description: state?.course?.description || "",
-    image: null,
-  });
-
-  // 1. Fetch All Instructors for the Dropdown (Real Project Standard)
-  useEffect(() => {
-    const fetchInstructors = async () => {
-      try {
-        const res = await api.get("/instructor/get-all");
-        // Adjust based on your API response structure
-        setInstructors(res.data.instructors || res.data.instructor || []);
-      } catch (error) {
-        console.error("Failed to load instructors", error);
-        toast.error("Could not load instructor list");
-      }
-    };
-    fetchInstructors();
-  }, []);
-
-  // 2. Handle Input Changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // 3. Handle Image Selection & Preview
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData((prev) => ({ ...prev, image: file }));
-      setPreview(URL.createObjectURL(file)); // Real-time preview
-    }
-  };
-
-  // 4. Submit Update
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const data = new FormData();
-      data.append("title", formData.title);
-      data.append("instructor", formData.instructor); // Sending the Hex ID
-      data.append("price", formData.price);
-      data.append("duration", formData.duration);
-      data.append("description", formData.description);
-
-      if (formData.image) {
-        data.append("image", formData.image);
-      }
-
-      const response = await api.put(`/course/edit/${id}`, data, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      });
-
-      toast.success(response.data.message || "Course updated successfully!");
-      navigate("/admin/course-management");
-    } catch (error) {
-      console.error("Update failed:", error.response?.data);
-      toast.error(
-        error.response?.data?.message || "Update failed (Server Error 500)",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fallback if state is missing (Page Refresh)
-  if (!state?.course) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 text-gray-500">
-        <p>No course data found. Please return to management.</p>
-        <button
-          onClick={() => navigate("/admin/course-management")}
-          className="text-blue-600 underline mt-2"
-        >
-          Go Back
-        </button>
-      </div>
-    );
-  }
+  const {
+    formData,
+    loading,
+    instructors,
+    preview,
+    handleChange,
+    handleImageChange,
+    handleUpdate,
+  } = useEditCourse();
 
   return (
     <div className="p-4 md:p-8 bg-gray-50 min-h-screen">

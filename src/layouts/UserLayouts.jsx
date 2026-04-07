@@ -7,15 +7,12 @@ const UserLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    // Change to h-screen
     <div className="h-screen flex flex-col overflow-hidden">
       <div className="flex flex-1 overflow-hidden">
         <UserSidebar
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
         />
-
-        {/* Scrollable area for content */}
         <div className="flex-1 flex flex-col overflow-y-auto">
           <div className="md:hidden flex items-center p-4 bg-white shadow sticky top-0 z-10">
             <button onClick={() => setSidebarOpen(true)}>

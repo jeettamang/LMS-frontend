@@ -72,9 +72,11 @@ const UserManagement = () => {
                 <td className="py-3 px-4">
                   <div className="flex gap-2">
                     <button
-                      onClick={() => navigate(`/admin/edit-user/${user._id}`,{
-                        state:{user}
-                      })}
+                      onClick={() =>
+                        navigate(`/admin/edit-user/${user._id}`, {
+                          state: { user },
+                        })
+                      }
                       className="bg-yellow-500 text-white px-3 py-1 rounded"
                     >
                       Edit
