@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import UseRegister from "../../hooks/UseRegister";
 import TextFields from "../../components/common/TextFields";
+import useRegister from "../../hooks/auth/useRegister";
 
 const Register = () => {
-  const { userData, handleChange, handleSubmit } = UseRegister();
+  const { userData, handleChange, handleSubmit } = useRegister();
 
   return (
     <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded-xl shadow-md">

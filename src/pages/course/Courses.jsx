@@ -9,7 +9,7 @@ const Courses = () => {
     try {
       const response = await api.get("/course/get-all");
       setCourses(response.data.course);
-      console.log(response.data.course);
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     }

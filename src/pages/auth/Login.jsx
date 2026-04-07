@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import UseLogin from "../../hooks/UseLogin";
 import TextFields from "../../components/common/TextFields";
+import useLogin from "../../hooks/auth/useLogin";
 
 const Login = () => {
-  const { userData, handleChange, handleSubmit } = UseLogin();
+  const { userData, handleChange, handleSubmit } = useLogin();
   return (
     <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded-xl shadow-md">
       <h2 className="text-center p-2 text-2xl font-semibold font-serif">

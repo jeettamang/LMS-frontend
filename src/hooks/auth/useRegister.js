@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import api from "../utils/axios";
+import api from "../../utils/axios";
 
-const UseRegister = () => {
+
+const useRegister = () => {
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState({
@@ -60,4 +61,4 @@ const UseRegister = () => {
   };
 };
 
-export default UseRegister;
+export default useRegister;
