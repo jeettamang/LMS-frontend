@@ -1,6 +1,7 @@
 import { useReducer, useEffect, createContext } from "react";
 import { toast } from "react-toastify";
 import api from "../utils/axios";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
@@ -96,6 +97,7 @@ export const AuthProvider = ({ children }) => {
 
   // LOGOUT
   const logout = async () => {
+    const navigate = useNavigate()
     try {
       await api.post("/users/logout");
     } catch (error) {
