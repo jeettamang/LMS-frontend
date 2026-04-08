@@ -35,31 +35,21 @@ const authReducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // LOGIN
-  // AuthContext.jsx
-
   const loginUser = async (email, password) => {
     try {
       let res;
       let userData = null;
-
-      // 1. Try User Login (Students/Admins)
       try {
         res = await api.post("/users/login", { email, password });
         userData = res.data.userData;
       } catch (userError) {
-        // 2. If User not found or unauthorized, try Instructor Login
-        // We only catch and move on if it's a 401/404, otherwise it's a real error
         res = await api.post("/instructor/login", { email, password });
-        userData = res.data.instructorDetails; // Note: using instructorDetails per your Postman
+        userData = res.data.instructorDetails; 
       }
 
-      // 3. If we got data from either source
       if (userData) {
-        // Save to LocalStorage for persistence
         localStorage.setItem("userInfo", JSON.stringify(userData));
 
-        // Update Global State
         dispatch({
           type: "login",
           payload: userData,
