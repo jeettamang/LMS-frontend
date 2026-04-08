@@ -7,7 +7,6 @@ import Courses from "../course/Courses";
 export default function Home() {
   const navigate = useNavigate();
 
-  // State for Search and Filters
   const [categories, setCategories] = useState([]);
   const [filters, setFilters] = useState({
     search: "",
@@ -15,11 +14,10 @@ export default function Home() {
     level: "Skill Level",
   });
 
-  // 1. Fetch real categories from your MongoDB
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data } = await api.get("/course-category/get"); // Update to your category route
+        const { data } = await api.get("/course-category/get-all"); 
         if (data.success) {
           setCategories(data.categories);
         }
@@ -32,13 +30,10 @@ export default function Home() {
 
   // 2. Handle Search Action
   const handleSearch = () => {
-    // Construct the query string for your updated getCourses controller
     const queryParams = new URLSearchParams();
     if (filters.search) queryParams.append("search", filters.search);
     if (filters.category !== "All Categories")
       queryParams.append("category", filters.category);
-
-    // Navigate to courses page with the filters in the URL
     navigate(`/courses?${queryParams.toString()}`);
   };
 
@@ -70,7 +65,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SEARCH SECTION - Now Dynamic */}
+      {/* SEARCH SECTION*/}
       <section className="py-12 px-6 bg-gray-100">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-4">
           <input
@@ -119,17 +114,10 @@ export default function Home() {
         <h2 className="text-3xl font-bold text-center mb-12">Our Services</h2>
         <Service />
       </section>
-
-      {/* Dynamic Courses List */}
       <h2 className="mt-4 text-center font-bold text-2xl">
         Choose the course you want to learn
       </h2>
       <Courses />
-
-      {/* FOOTER */}
-      <footer className="bg-slate-900 text-white py-8 text-center">
-        <p>© 2026 IT Training Institute. All rights reserved.</p>
-      </footer>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Save, Image as ImageIcon, ArrowLeft } from "lucide-react";
 import useCreateCourse from "../../hooks/admin/useCreateCourse";
+import TextFields from "../../components/common/TextFields";
 
 const CreateCourse = () => {
   const navigate = useNavigate();
@@ -8,6 +9,7 @@ const CreateCourse = () => {
     loading,
     preview,
     instructors,
+    categories,
     handleChange,
     handleFileChange,
     handleSubmit,
@@ -15,7 +17,7 @@ const CreateCourse = () => {
   } = useCreateCourse();
 
   return (
-    <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
+    <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto">
         <button
           onClick={() => navigate(-1)}
@@ -24,7 +26,7 @@ const CreateCourse = () => {
           <ArrowLeft size={18} className="mr-1" /> Back to Dashboard
         </button>
 
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">
           Create New Course
         </h1>
 
@@ -32,74 +34,78 @@ const CreateCourse = () => {
           onSubmit={handleSubmit}
           className="grid grid-cols-1 lg:grid-cols-3 gap-8"
         >
-          {/* Main Content Card */}
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
               <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
-                    Course Title
-                  </label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={courseData.title}
-                    onChange={handleChange}
-                    placeholder="e.g. Full Stack Web Development"
-                    className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none"
-                    required
-                  />
-                </div>
+                <TextFields
+                  type="text"
+                  label="Course title"
+                  name="title"
+                  value={courseData.title}
+                  onChange={handleChange}
+                  placeholder="e.g. Full Stack Web Development"
+                />
 
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
-                    Instructor
-                  </label>
-                  <select
-                    name="instructor"
-                    value={courseData.instructor}
-                    onChange={handleChange}
-                    className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none"
-                    required
-                  >
-                    <option value="">Select Instructor</option>
-                    {instructors.map((inst) => (
-                      <option key={inst._id} value={inst._id}>
-                        {inst.name}
-                      </option>
-                    ))}
-                  </select>
+                {/* TWO COLUMN ROW: Instructor and Category */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                      Instructor
+                    </label>
+                    <select
+                      name="instructor"
+                      value={courseData.instructor}
+                      onChange={handleChange}
+                      className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                      required
+                    >
+                      <option value="">Select Instructor</option>
+                      {instructors.map((inst) => (
+                        <option key={inst._id} value={inst._id}>
+                          {inst.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                      Category
+                    </label>
+                    <select
+                      name="category"
+                      value={courseData.category}
+                      onChange={handleChange}
+                      className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                      required
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map((cat) => (
+                        <option key={cat._id} value={cat._id}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">
-                      Price (Rs.)
-                    </label>
-                    <input
-                      type="number"
-                      name="price"
-                      value={courseData.price}
-                      onChange={handleChange}
-                      placeholder="0.00"
-                      className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">
-                      Duration
-                    </label>
-                    <input
-                      type="text"
-                      name="duration"
-                      value={courseData.duration}
-                      onChange={handleChange}
-                      placeholder="e.g. 3 Months"
-                      className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none"
-                      required
-                    />
-                  </div>
+                  <TextFields
+                    type="number"
+                    label="Price"
+                    name="price"
+                    value={courseData.price}
+                    onChange={handleChange}
+                    placeholder="0.00"
+                  />
+                  <TextFields
+                    type="text"
+                    label="Duration"
+                    name="duration"
+                    value={courseData.duration}
+                    onChange={handleChange}
+                    placeholder="e.g. 3 months"
+                  />
                 </div>
 
                 <div>
@@ -120,13 +126,11 @@ const CreateCourse = () => {
             </div>
           </div>
 
-          {/* Sidebar Card: Image & Actions */}
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center">
               <label className="block text-sm font-semibold text-gray-700 mb-4 text-left">
-                Course Ccourse
+                Course Thumbnail
               </label>
-
               <div className="w-full aspect-video rounded-xl bg-gray-50 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center overflow-hidden mb-4">
                 {preview ? (
                   <img
@@ -141,7 +145,6 @@ const CreateCourse = () => {
                   </div>
                 )}
               </div>
-
               <input
                 type="file"
                 id="course-image"
