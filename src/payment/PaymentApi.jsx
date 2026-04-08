@@ -8,22 +8,26 @@ function PaymentApi() {
   const navigate = useNavigate();
   const [paymentData, setPaymentData] = useState(null);
   const hasCreated = useRef(false);
-  console.log(state)
+  console.log(state);
 
+  const isProd = (import.meta.MODE = "production");
+  const successUrl = isProd
+    ? "https://lms-app-lps9.onrender.com/api/v1/enrollment/verify-esewa"
+    : "http://localhost:7000/api/v1/enrollment/verify-esewa";
+
+  const failureUrl = isProd
+    ? "https://lms-frontend-jade-xi.vercel.app/failure"
+    : "http://localhost:5173/payment-failure";
   useEffect(() => {
-    if (!state) return;
-    if (hasCreated.current) return;
+    if (!state || hasCreated.current) return;
 
     const createPending = async () => {
       try {
-        // Ensure the key 'course' matches what you sent from EnrollCourse
         const res = await api.post("/enrollment/create", {
           address: state.address,
           phone: state.phone,
           course: state.courseId,
         });
-
-        console.log(res.data)
         setPaymentData(res.data);
         hasCreated.current = true;
       } catch (err) {
@@ -34,7 +38,6 @@ function PaymentApi() {
     createPending();
   }, [state]);
 
-  // 1. Handle Missing State (Redirect or Error)
   if (!state) {
     return (
       <div className="flex flex-col items-center mt-20">
@@ -49,7 +52,6 @@ function PaymentApi() {
     );
   }
 
-  // 2. Loading State (Show while waiting for Backend signature)
   if (!paymentData) {
     return (
       <div className="flex flex-col items-center justify-center mt-40">
@@ -61,7 +63,6 @@ function PaymentApi() {
     );
   }
 
-  // 3. Destructure ONLY after we know paymentData exists
   const { amount, transaction_uuid, signature, product_code } = paymentData;
 
   return (
@@ -83,7 +84,6 @@ function PaymentApi() {
           </h1>
         </div>
 
-        {/* eSewa Required Hidden Fields */}
         <input type="hidden" name="amount" value={amount} />
         <input type="hidden" name="tax_amount" value="0" />
         <input type="hidden" name="total_amount" value={amount} />
@@ -94,12 +94,12 @@ function PaymentApi() {
         <input
           type="hidden"
           name="success_url"
-          value="http://localhost:7000/api/v1/enrollment/verify-esewa"
+          value={successUrl}
         />
         <input
           type="hidden"
           name="failure_url"
-          value="http://localhost:5173/payment-failure"
+          value={failureUrl}
         />
         <input
           type="hidden"
