@@ -75,6 +75,7 @@ const useInstructorCreateCourse = () => {
   return {
     loading,
     preview,
+    courseData,
     handleChange,
     handleFileChange,
     handleSubmit,

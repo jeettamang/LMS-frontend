@@ -20,8 +20,11 @@ const InstrucorDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const { data } = await api.get("/instructor/my-dashboard");
+        const { data } = await api.get("/instructor/my-dashboard", {
+          withCredentials: true,
+        });
         setDashboardData(data);
+        console.log(data);
       } catch (error) {
         console.error("Dashboard fetch error:", error);
       } finally {

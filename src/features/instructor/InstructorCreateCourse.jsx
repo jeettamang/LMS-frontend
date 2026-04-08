@@ -1,12 +1,20 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Save, Image as ImageIcon, ArrowLeft } from "lucide-react";
+import { AuthContext } from "../../context/AuthContext";
 import useInstructorCreateCourse from "../../hooks/instructor/useInstructorCreateCourse";
 
 const InstructorCreateCourse = () => {
+  const {userInfo} = useContext(AuthContext)
   const navigate = useNavigate();
-  const { loading, preview, handleChange, handleFileChange, handleSubmit } =
-    useInstructorCreateCourse();
+  const {
+    loading,
+    preview,
+    courseData,
+    handleChange,
+    handleFileChange,
+    handleSubmit,
+  } = useInstructorCreateCourse();
 
   return (
     <div className="p-4 md:p-8 bg-gray-50 min-h-screen">

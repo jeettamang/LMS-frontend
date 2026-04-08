@@ -1,5 +1,5 @@
 import axios from "axios";
-import { baseURL } from "../config/ApiRoute";
+import baseURL from "../config/ApiRoute";
 
 const api = axios.create({
   baseURL: baseURL,
