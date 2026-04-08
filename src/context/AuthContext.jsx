@@ -35,7 +35,7 @@ const authReducer = (state, action) => {
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-
+  const navigate = useNavigate();
   const loginUser = async (email, password) => {
     try {
       let res;
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
         userData = res.data.userData;
       } catch (userError) {
         res = await api.post("/instructor/login", { email, password });
-        userData = res.data.instructorDetails; 
+        userData = res.data.instructorDetails;
       }
 
       if (userData) {
@@ -97,7 +97,6 @@ export const AuthProvider = ({ children }) => {
 
   // LOGOUT
   const logout = async () => {
-    const navigate = useNavigate()
     try {
       await api.post("/users/logout");
     } catch (error) {
