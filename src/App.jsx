@@ -6,11 +6,10 @@ function App() {
   return (
     <>
       <Header />
-      <div className="min-h-screen">
+      <div>
         <AppRoutes />
       </div>
       <ToastContainer position="top-right" autoClose={2000} theme="colored" />
-   
     </>
   );
 }

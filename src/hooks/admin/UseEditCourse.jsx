@@ -18,7 +18,15 @@ const useEditCourse = () => {
     price: state?.course?.price || "",
     duration: state?.course?.duration || "",
     description: state?.course?.description || "",
+    videoUrl: state?.course?.videoUrl || "",
     image: null,
+
+    syllabus:
+      state?.course?.syllabus?.length > 0 ? state.course.syllabus : [""],
+    prerequisites:
+      state?.course?.prerequisites?.length > 0
+        ? state.course.prerequisites
+        : [""],
   });
 
   useEffect(() => {
@@ -27,7 +35,6 @@ const useEditCourse = () => {
         const res = await api.get("/instructor/get-all");
         setInstructors(res.data.instructors || res.data.instructor || []);
       } catch (error) {
-        console.error("Failed to load instructors", error);
         toast.error("Could not load instructor list");
       }
     };
@@ -39,6 +46,21 @@ const useEditCourse = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleArrayChange = (index, value, field) => {
+    const newArray = [...formData[field]];
+    newArray[index] = value;
+    setFormData((prev) => ({ ...prev, [field]: newArray }));
+  };
+
+  const addArrayField = (field) => {
+    setFormData((prev) => ({ ...prev, [field]: [...prev[field], ""] }));
+  };
+
+  const removeArrayField = (index, field) => {
+    const newArray = formData[field].filter((_, i) => i !== index);
+    setFormData((prev) => ({ ...prev, [field]: newArray }));
+  };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -47,7 +69,6 @@ const useEditCourse = () => {
     }
   };
 
-  // 4. Submit Update
   const handleUpdate = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -55,10 +76,21 @@ const useEditCourse = () => {
     try {
       const data = new FormData();
       data.append("title", formData.title);
-      data.append("instructor", formData.instructor); // Sending the Hex ID
+      data.append("instructor", formData.instructor);
       data.append("price", formData.price);
       data.append("duration", formData.duration);
       data.append("description", formData.description);
+      data.append("videoUrl", formData.videoUrl);
+
+      // Stringify filtered arrays (removes empty strings)
+      data.append(
+        "syllabus",
+        JSON.stringify(formData.syllabus.filter((s) => s.trim() !== "")),
+      );
+      data.append(
+        "prerequisites",
+        JSON.stringify(formData.prerequisites.filter((p) => p.trim() !== "")),
+      );
 
       if (formData.image) {
         data.append("image", formData.image);
@@ -72,33 +104,21 @@ const useEditCourse = () => {
       toast.success(response.data.message || "Course updated successfully!");
       navigate("/admin/course-management");
     } catch (error) {
-      console.error("Update failed:", error.response?.data);
-      toast.error(
-        error.response?.data?.message || "Update failed (Server Error 500)",
-      );
+      toast.error(error.response?.data?.message || "Update failed");
     } finally {
       setLoading(false);
     }
   };
-  if (!state?.course) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 text-gray-500">
-        <p>No course data found. Please return to management.</p>
-        <button
-          onClick={() => navigate("/admin/course-management")}
-          className="text-blue-600 underline mt-2"
-        >
-          Go Back
-        </button>
-      </div>
-    );
-  }
+
   return {
     formData,
     loading,
     instructors,
     preview,
     handleChange,
+    handleArrayChange,
+    addArrayField,
+    removeArrayField,
     handleImageChange,
     handleUpdate,
   };

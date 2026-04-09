@@ -17,7 +17,7 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data } = await api.get("/course-category/get-all"); 
+        const { data } = await api.get("/course-category/get-all");
         if (data.success) {
           setCategories(data.categories);
         }
@@ -28,12 +28,20 @@ export default function Home() {
     fetchCategories();
   }, []);
 
-  // 2. Handle Search Action
   const handleSearch = () => {
+    if (filters.category && filters.category !== "All Categories") {
+      const element = document.getElementById(filters.category);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+        return;
+      }
+    }
+
     const queryParams = new URLSearchParams();
     if (filters.search) queryParams.append("search", filters.search);
     if (filters.category !== "All Categories")
       queryParams.append("category", filters.category);
+
     navigate(`/courses?${queryParams.toString()}`);
   };
 
@@ -91,16 +99,6 @@ export default function Home() {
             ))}
           </select>
 
-          <select
-            className="border rounded-lg px-4 py-3"
-            value={filters.level}
-            onChange={(e) => setFilters({ ...filters, level: e.target.value })}
-          >
-            <option>Skill Level</option>
-            <option value="Beginner">Beginner</option>
-            <option value="Advanced">Advanced</option>
-          </select>
-
           <button
             onClick={handleSearch}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
@@ -117,7 +115,7 @@ export default function Home() {
       <h2 className="mt-4 text-center font-bold text-2xl">
         Choose the course you want to learn
       </h2>
-      <Courses />
+      <Courses  />
     </div>
   );
 }

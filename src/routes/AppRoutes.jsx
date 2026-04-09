@@ -39,8 +39,8 @@ import Blogs from "../pages/blogs/Blogs";
 import BlogDetails from "../pages/blogs/BlogDetails";
 import Profile from "../pages/profile/Profile";
 import PaymentApi from "../payment/PaymentApi";
-import Success from "../payment/Success";
 import Failure from "../payment/Failure";
+import Success from "../payment/Success";
 import AllEnrollments from "../features/admin/AllEnrollments";
 import EditProfile from "../pages/profile/EditProfile";
 
@@ -56,10 +56,12 @@ const AppRoutes = () => {
     <Routes>
       <Route
         element={
-          <>
-            <Outlet />
+          <div className="flex flex-col min-h-screen">
+            <main className="grow">
+              <Outlet />
+            </main>
             <Footer />
-          </>
+          </div>
         }
       >
         <Route path="/" element={<Home />} />
