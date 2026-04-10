@@ -1,6 +1,6 @@
 const Service = () => {
   return (
-    <div className="grid md:grid-cols-3 gap-3 md:gap-8 md:max-w-6xl mx-auto">
+    <div className="grid md:grid-cols-3 gap-3 md:gap-8 md:max-w-7xl mx-auto">
       {[
         {
           title: "IT Training",
