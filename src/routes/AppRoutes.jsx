@@ -50,6 +50,8 @@ import InstrucorDashboard from "../features/instructor/InstrucorDashboard";
 import Students from "../features/instructor/Students";
 import InstructorCreateCourse from "../features/instructor/InstructorCreateCourse";
 import InstructorMyCourses from "../features/instructor/InstructorMyCourses";
+import Assignments from "../features/instructor/Assignments";
+import CreateAssignment from "../features/instructor/CreateAssignment";
 
 const AppRoutes = () => {
   return (
@@ -97,6 +99,8 @@ const AppRoutes = () => {
           <Route path="create-course" element={<InstructorCreateCourse />} />
           <Route path="my-courses" element={<InstructorMyCourses />} />
           <Route path="students" element={<Students />} />
+          <Route path="assignment" element={<Assignments />} />
+          <Route path="create-assignment" element={<CreateAssignment />} />
         </Route>
       </Route>
 

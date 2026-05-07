@@ -28,6 +28,11 @@ export const menuItems = [
     icon: <GraduationCap size={20} />,
   },
   {
+    name: "Assignment",
+    path: "/instructor/assignment",
+    icon: <GraduationCap size={20} />,
+  },
+  {
     name: "Profile",
     path: "/profile",
     icon: <UserCircle size={20} />,

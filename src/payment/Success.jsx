@@ -6,13 +6,12 @@ import { Loader2 } from "lucide-react";
 function Success() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [status, setStatus] = useState("verifying"); // 'verifying', 'success', 'error'
+  const [status, setStatus] = useState("verifying");
 
   const tid = searchParams.get("tid");
 
   useEffect(() => {
     const verifyEnrollment = async () => {
-      // 1. Check if the ID exists in the URL at all
       if (!tid) {
         console.error("No Transaction ID found in URL");
         navigate("/");
@@ -20,7 +19,6 @@ function Success() {
       }
 
       try {
-        // 2. Ask backend if THIS specific enrollment is actually paid
         const res = await api.get(`/enrollment/check-status/${tid}`);
 
         if (res.data.status === "paid") {
